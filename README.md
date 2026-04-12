@@ -1,49 +1,76 @@
-🛡️ Scanner
-A modular web reconnaissance and vulnerability orchestrator. This tool automates the heavy lifting of security auditing by combining multiple scanning techniques into a single workflow.
+# 🛡️ Scanner
 
-📂 Project Structure
-It is organized as a flat-module system for maximum transparency:
+A modular web reconnaissance and vulnerability orchestrator.
 
-main.py: The central brain. It handles user input, triggers modules, and manages data flow.
+This tool automates the heavy lifting of security auditing by combining multiple scanning techniques into a single workflow.
 
-headerscanner.py: Checks for missing security headers (HSTS, X-Frame-Options, etc.).
+---
 
-sqlinjection.py & xsstest.py: Targeted scanners for common web vulnerabilities.
+## 📂 Project Structure
 
-portscanner.py: Scans for open services (supports both native Python and Nmap).
+The project follows a **flat-module architecture** for simplicity and transparency:
 
-cmsdetect.py: Identifies platforms like WordPress, Joomla, or Drupal.
+- **main.py** → The central controller. Handles user input, triggers modules, and manages data flow.
+- **headerscanner.py** → Detects missing security headers (HSTS, X-Frame-Options, etc.).
+- **sqlinjection.py & xsstest.py** → Basic vulnerability scanners for SQL Injection and XSS.
+- **portscanner.py** → Scans for open ports (Python-based + optional Nmap support).
+- **cmsdetect.py** → Identifies CMS platforms (WordPress, Joomla, Drupal, etc.).
+- **directoryscan.py & subdomainscanner.py** → Maps hidden attack surface (directories + subdomains).
+- **reportgen.py** → Generates structured HTML reports from scan results.
 
-directoryscan.py & subdomainscanner.py: Maps out the target's hidden attack surface.
+---
 
-reportgen.py: Converts raw scan data into professional HTML reports.
+## 🚀 Getting Started
 
-🚀 Getting Started
-1. Installation
-Ensure you are in the PROJECT directory and run:
+### 1. Installation
 
-Bash
+Ensure you are in the **project root directory**, then install dependencies:
+
+bash
 pip install -r requirements.txt
-2. Usage
-Start the interactive scanning process:
 
-Bash
+2. Usage
+
+Start the interactive scanner:
+
 python main.py
 3. Output
-Check the /reports folder after a scan completes. You'll find:
 
-JSON files: For data logs and integration.
+After each scan, results are saved in the /reports directory:
 
-HTML reports: For human-readable summaries.
+📄 JSON files → Raw structured scan data
+🌐 HTML reports → Human-readable vulnerability summary
+📦 Requirements
 
+Create a requirements.txt file with:
+
+requests
+beautifulsoup4
+lxml
+python-nmap
 ⚙️ Configuration
-You can toggle the following features during the startup prompt:
 
-Nmap Integration: Deeper port scanning (requires Nmap installed on your OS).
+During startup, you can enable or disable:
 
-Subdomain Brute-forcing: Discovers non-public sub-assets.
+🛰️ Nmap Integration → Advanced port scanning (requires Nmap installed)
+🌍 Subdomain Brute Force → Discover hidden assets
+🔌 Port Scanning → Quick service enumeration
+🧠 Modules Overview
 
-Port Scanning: Quick check for common open ports.
+The scanner is composed of independent modules:
 
+headerscanner.py → Security header analysis
+sqlinjection.py → SQL Injection testing
+xsstest.py → XSS detection
+portscanner.py → Port scanning (Python + Nmap)
+cmsdetect.py → CMS fingerprinting
+directoryscan.py → Hidden directory discovery
+subdomainscanner.py → Subdomain enumeration
+reportgen.py → HTML report generator
 ⚠️ Legal Notice
-Scanner is intended for authorized security testing and educational purposes only. Do not use this tool against any infrastructure you do not have explicit, written permission to test. The author is not responsible for any misuse or damage caused by this program.
+
+This tool is intended for authorized security testing and educational purposes only.
+
+Do not use it against any system you do not own or have explicit written permission to test.
+
+The author is not responsible for any misuse or damage caused by this tool.
