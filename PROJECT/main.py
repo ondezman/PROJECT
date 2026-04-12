@@ -12,7 +12,6 @@ from xsstest import test_xss
 from portscanner import port_scan, run_nmap
 from subdomainscanner import scan_subdomains
 from cmsdetect import detect_cms
-from portscanner import port_scan
 from reportgen import generate_report
 
 logging.basicConfig(
