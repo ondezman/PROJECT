@@ -1,0 +1,21 @@
+# Python bytecode and cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Environments
+.venv/
+venv/
+ENV/
+env/
+.env
+
+# Project Specific
+reports/
+
+# Operating System files
+.DS_Store
+Thumbs.db
+
+# VS Code specific
+.vscode/
