@@ -1,6 +1,7 @@
 import sys
 import json
 import logging
+import concurrent.futures
 from datetime import datetime, timezone
 from urllib.parse import urlparse
 
@@ -34,20 +35,7 @@ def validate_url(url):
     parsed = urlparse(url)
     return parsed.scheme in ("http", "https") and bool(parsed.netloc)
 
-
-def run_scan(url, use_nmap=False, use_subdomains=True, use_ports=True):
-    """
-    Runs all vulnerability and recon checks on a target URL.
-
-    Args:
-        url           (str):  Target website URL
-        use_nmap      (bool): Run Nmap scan (requires Nmap installed)
-        use_subdomains(bool): Run subdomain brute-force
-        use_ports     (bool): Run pure Python port scan
-
-    Returns:
-        dict: Full scan results
-    """
+def run_scan(url, use_nmap=False, use_subdomains=True, use_ports=True, module_timeout=60):
     if not validate_url(url):
         return {"error": f"Invalid URL: '{url}'. Must start with http:// or https://"}
 
@@ -89,17 +77,20 @@ def run_scan(url, use_nmap=False, use_subdomains=True, use_ports=True):
         log.info("SQLi and XSS skipped — no query parameters")
 
     for name, check in checks.items():
-        log.info("Running %s...", name)
+        log.info("Running %s (timeout: %ss)...", name, module_timeout)
         try:
-            results[name] = check()
+            with concurrent.futures.ThreadPoolExecutor(max_workers=1) as executor:
+                future = executor.submit(check)
+                results[name] = future.result(timeout=module_timeout)
             log.info("%s complete", name)
+        except concurrent.futures.TimeoutError:
+            log.error("%s timed out after %ss", name, module_timeout)
+            results[name] = {"error": f"Module timed out after {module_timeout} seconds"}
         except Exception as e:
             log.error("%s failed: %s", name, e)
             results[name] = {"error": str(e)}
 
     return results
-
-
 def print_results(results):
     """
     Pretty-prints scan results to stdout.
